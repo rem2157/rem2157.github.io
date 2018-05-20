@@ -19,6 +19,9 @@ TRANSLATION_FEED_ATOM = None
 AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 
+# For .ipynb support, accept both .md and .ipynb as acceptable Markdown extensions
+MARKUP = ('md', 'ipynb')
+
 # Themes
 
 THEME = '../pelican-themes/pelican-bootstrap3'
@@ -27,8 +30,8 @@ BOOTSTRAP_THEME = 'darkly'
 
 # Plugins
 
-PLUGIN_PATHS = ['../pelican-plugins'] 
-PLUGINS = ['i18n_subsites']
+PLUGIN_PATHS = ['./plugins'] 
+PLUGINS = ['i18n_subsites', 'ipynb']
 
 # Blogroll
 LINKS = (('Pelican', 'http://getpelican.com/'),
