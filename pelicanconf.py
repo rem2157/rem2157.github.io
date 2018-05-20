@@ -31,7 +31,7 @@ BOOTSTRAP_THEME = 'darkly'
 # Plugins
 
 PLUGIN_PATHS = ['./plugins'] 
-PLUGINS = ['i18n_subsites', 'ipynb']
+PLUGINS = ['i18n_subsites', 'ipynb.markup']
 
 # Blogroll
 LINKS = (('Pelican', 'http://getpelican.com/'),
