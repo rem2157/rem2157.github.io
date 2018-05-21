@@ -1,0 +1,1886 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>Citibike Data Exploration : First Steps - Ryan Mulvey</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="https://ryan.mulvey.nyc/citibike-data-1.html">
+
+        <meta name="author" content="Ryan Mulvey" />
+        <meta name="keywords" content="citibike,python,pandas" />
+        <meta name="description" content="Citibike Data : First Steps and Analysis¶" />
+
+        <meta property="og:site_name" content="Ryan Mulvey" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Citibike Data Exploration : First Steps"/>
+        <meta property="og:url" content="https://ryan.mulvey.nyc/citibike-data-1.html"/>
+        <meta property="og:description" content="Citibike Data : First Steps and Analysis¶"/>
+        <meta property="article:published_time" content="2018-05-20" />
+            <meta property="article:section" content="python" />
+            <meta property="article:tag" content="citibike" />
+            <meta property="article:tag" content="python" />
+            <meta property="article:tag" content="pandas" />
+            <meta property="article:author" content="Ryan Mulvey" />
+
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://ryan.mulvey.nyc/theme/css/bootstrap.darkly.min.css" type="text/css"/>
+    <link href="https://ryan.mulvey.nyc/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://ryan.mulvey.nyc/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://ryan.mulvey.nyc/theme/css/style.css" type="text/css"/>
+
+        <link href="https://ryan.mulvey.nyc/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Ryan Mulvey ATOM Feed"/>
+
+
+
+        <link href="https://ryan.mulvey.nyc/feeds/python.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Ryan Mulvey python ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://ryan.mulvey.nyc/" class="navbar-brand">
+Ryan Mulvey            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                        <li >
+                            <a href="https://ryan.mulvey.nyc/category/misc.html">Misc</a>
+                        </li>
+                        <li class="active">
+                            <a href="https://ryan.mulvey.nyc/category/python.html">Python</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<!-- Banner -->
+<!-- End Banner -->
+
+<!-- Content Container -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://ryan.mulvey.nyc/citibike-data-1.html"
+                       rel="bookmark"
+                       title="Permalink to Citibike Data Exploration : First Steps">
+                        Citibike Data Exploration : First Steps
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2018-05-20T15:40:00-04:00"> Sun 20 May 2018</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://ryan.mulvey.nyc/tag/citibike.html">citibike</a>
+        /
+	<a href="https://ryan.mulvey.nyc/tag/python.html">python</a>
+        /
+	<a href="https://ryan.mulvey.nyc/tag/pandas.html">pandas</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <style type="text/css">/*!
+*
+* IPython notebook
+*
+*/
+/* CSS font colors for translated ANSI colors. */
+.ansibold {
+  font-weight: bold;
+}
+/* use dark versions for foreground, to improve visibility */
+.ansiblack {
+  color: black;
+}
+.ansired {
+  color: darkred;
+}
+.ansigreen {
+  color: darkgreen;
+}
+.ansiyellow {
+  color: #c4a000;
+}
+.ansiblue {
+  color: darkblue;
+}
+.ansipurple {
+  color: darkviolet;
+}
+.ansicyan {
+  color: steelblue;
+}
+.ansigray {
+  color: gray;
+}
+/* and light for background, for the same reason */
+.ansibgblack {
+  background-color: black;
+}
+.ansibgred {
+  background-color: red;
+}
+.ansibggreen {
+  background-color: green;
+}
+.ansibgyellow {
+  background-color: yellow;
+}
+.ansibgblue {
+  background-color: blue;
+}
+.ansibgpurple {
+  background-color: magenta;
+}
+.ansibgcyan {
+  background-color: cyan;
+}
+.ansibggray {
+  background-color: gray;
+}
+div.cell {
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: 2px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+  width: 100%;
+  padding: 5px;
+  /* This acts as a spacer between cells, that is outside the border */
+  margin: 0px;
+  outline: none;
+  border-left-width: 1px;
+  padding-left: 5px;
+  background: linear-gradient(to right, transparent -40px, transparent 1px, transparent 1px, transparent 100%);
+}
+div.cell.jupyter-soft-selected {
+  border-left-color: #90CAF9;
+  border-left-color: #E3F2FD;
+  border-left-width: 1px;
+  padding-left: 5px;
+  border-right-color: #E3F2FD;
+  border-right-width: 1px;
+  background: #E3F2FD;
+}
+@media print {
+  div.cell.jupyter-soft-selected {
+    border-color: transparent;
+  }
+}
+div.cell.selected {
+  border-color: #ababab;
+  border-left-width: 0px;
+  padding-left: 6px;
+  background: linear-gradient(to right, #42A5F5 -40px, #42A5F5 5px, transparent 5px, transparent 100%);
+}
+@media print {
+  div.cell.selected {
+    border-color: transparent;
+  }
+}
+div.cell.selected.jupyter-soft-selected {
+  border-left-width: 0;
+  padding-left: 6px;
+  background: linear-gradient(to right, #42A5F5 -40px, #42A5F5 7px, #E3F2FD 7px, #E3F2FD 100%);
+}
+.edit_mode div.cell.selected {
+  border-color: #66BB6A;
+  border-left-width: 0px;
+  padding-left: 6px;
+  background: linear-gradient(to right, #66BB6A -40px, #66BB6A 5px, transparent 5px, transparent 100%);
+}
+@media print {
+  .edit_mode div.cell.selected {
+    border-color: transparent;
+  }
+}
+.prompt {
+  /* This needs to be wide enough for 3 digit prompt numbers: In[100]: */
+  min-width: 14ex;
+  /* This padding is tuned to match the padding on the CodeMirror editor. */
+  padding: 0.4em;
+  margin: 0px;
+  font-family: monospace;
+  text-align: right;
+  /* This has to match that of the the CodeMirror class line-height below */
+  line-height: 1.21429em;
+  /* Don't highlight prompt number selection */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* Use default cursor */
+  cursor: default;
+}
+@media (max-width: 540px) {
+  .prompt {
+    text-align: left;
+  }
+}
+div.inner_cell {
+  min-width: 0;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  /* Old browsers */
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  box-flex: 1;
+  /* Modern browsers */
+  flex: 1;
+}
+/* input_area and input_prompt must match in top border and margin for alignment */
+div.input_area {
+  border: 1px solid #cfcfcf;
+  border-radius: 2px;
+  background: #f7f7f7;
+  line-height: 1.21429em;
+}
+/* This is needed so that empty prompt areas can collapse to zero height when there
+   is no content in the output_subarea and the prompt. The main purpose of this is
+   to make sure that empty JavaScript output_subareas have no height. */
+div.prompt:empty {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+div.unrecognized_cell {
+  padding: 5px 5px 5px 0px;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+div.unrecognized_cell .inner_cell {
+  border-radius: 2px;
+  padding: 5px;
+  font-weight: bold;
+  color: red;
+  border: 1px solid #cfcfcf;
+  background: #eaeaea;
+}
+div.unrecognized_cell .inner_cell a {
+  color: inherit;
+  text-decoration: none;
+}
+div.unrecognized_cell .inner_cell a:hover {
+  color: inherit;
+  text-decoration: none;
+}
+@media (max-width: 540px) {
+  div.unrecognized_cell > div.prompt {
+    display: none;
+  }
+}
+div.code_cell {
+  /* avoid page breaking on code cells when printing */
+}
+@media print {
+  div.code_cell {
+    page-break-inside: avoid;
+  }
+}
+/* any special styling for code cells that are currently running goes here */
+div.input {
+  page-break-inside: avoid;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+@media (max-width: 540px) {
+  div.input {
+    /* Old browsers */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-align: stretch;
+    display: -moz-box;
+    -moz-box-orient: vertical;
+    -moz-box-align: stretch;
+    display: box;
+    box-orient: vertical;
+    box-align: stretch;
+    /* Modern browsers */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+/* input_area and input_prompt must match in top border and margin for alignment */
+div.input_prompt {
+  color: #303F9F;
+  border-top: 1px solid transparent;
+}
+div.input_area > div.highlight {
+  margin: 0.4em;
+  border: none;
+  padding: 0px;
+  background-color: transparent;
+}
+div.input_area > div.highlight > pre {
+  margin: 0px;
+  border: none;
+  padding: 0px;
+  background-color: transparent;
+}
+/* The following gets added to the <head> if it is detected that the user has a
+ * monospace font with inconsistent normal/bold/italic height.  See
+ * notebookmain.js.  Such fonts will have keywords vertically offset with
+ * respect to the rest of the text.  The user should select a better font.
+ * See: https://github.com/ipython/ipython/issues/1503
+ *
+ * .CodeMirror span {
+ *      vertical-align: bottom;
+ * }
+ */
+.CodeMirror {
+  line-height: 1.21429em;
+  /* Changed from 1em to our global default */
+  font-size: 14px;
+  height: auto;
+  /* Changed to auto to autogrow */
+  background: none;
+  /* Changed from white to allow our bg to show through */
+}
+.CodeMirror-scroll {
+  /*  The CodeMirror docs are a bit fuzzy on if overflow-y should be hidden or visible.*/
+  /*  We have found that if it is visible, vertical scrollbars appear with font size changes.*/
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+.CodeMirror-lines {
+  /* In CM2, this used to be 0.4em, but in CM3 it went to 4px. We need the em value because */
+  /* we have set a different line-height and want this to scale with that. */
+  padding: 0.4em;
+}
+.CodeMirror-linenumber {
+  padding: 0 8px 0 4px;
+}
+.CodeMirror-gutters {
+  border-bottom-left-radius: 2px;
+  border-top-left-radius: 2px;
+}
+.CodeMirror pre {
+  /* In CM3 this went to 4px from 0 in CM2. We need the 0 value because of how we size */
+  /* .CodeMirror-lines */
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+}
+/*
+
+Original style from softwaremaniacs.org (c) Ivan Sagalaev <Maniac@SoftwareManiacs.Org>
+Adapted from GitHub theme
+
+*/
+.highlight-base {
+  color: #000;
+}
+.highlight-variable {
+  color: #000;
+}
+.highlight-variable-2 {
+  color: #1a1a1a;
+}
+.highlight-variable-3 {
+  color: #333333;
+}
+.highlight-string {
+  color: #BA2121;
+}
+.highlight-comment {
+  color: #408080;
+  font-style: italic;
+}
+.highlight-number {
+  color: #080;
+}
+.highlight-atom {
+  color: #88F;
+}
+.highlight-keyword {
+  color: #008000;
+  font-weight: bold;
+}
+.highlight-builtin {
+  color: #008000;
+}
+.highlight-error {
+  color: #f00;
+}
+.highlight-operator {
+  color: #AA22FF;
+  font-weight: bold;
+}
+.highlight-meta {
+  color: #AA22FF;
+}
+/* previously not defined, copying from default codemirror */
+.highlight-def {
+  color: #00f;
+}
+.highlight-string-2 {
+  color: #f50;
+}
+.highlight-qualifier {
+  color: #555;
+}
+.highlight-bracket {
+  color: #997;
+}
+.highlight-tag {
+  color: #170;
+}
+.highlight-attribute {
+  color: #00c;
+}
+.highlight-header {
+  color: blue;
+}
+.highlight-quote {
+  color: #090;
+}
+.highlight-link {
+  color: #00c;
+}
+/* apply the same style to codemirror */
+.cm-s-ipython span.cm-keyword {
+  color: #008000;
+  font-weight: bold;
+}
+.cm-s-ipython span.cm-atom {
+  color: #88F;
+}
+.cm-s-ipython span.cm-number {
+  color: #080;
+}
+.cm-s-ipython span.cm-def {
+  color: #00f;
+}
+.cm-s-ipython span.cm-variable {
+  color: #000;
+}
+.cm-s-ipython span.cm-operator {
+  color: #AA22FF;
+  font-weight: bold;
+}
+.cm-s-ipython span.cm-variable-2 {
+  color: #1a1a1a;
+}
+.cm-s-ipython span.cm-variable-3 {
+  color: #333333;
+}
+.cm-s-ipython span.cm-comment {
+  color: #408080;
+  font-style: italic;
+}
+.cm-s-ipython span.cm-string {
+  color: #BA2121;
+}
+.cm-s-ipython span.cm-string-2 {
+  color: #f50;
+}
+.cm-s-ipython span.cm-meta {
+  color: #AA22FF;
+}
+.cm-s-ipython span.cm-qualifier {
+  color: #555;
+}
+.cm-s-ipython span.cm-builtin {
+  color: #008000;
+}
+.cm-s-ipython span.cm-bracket {
+  color: #997;
+}
+.cm-s-ipython span.cm-tag {
+  color: #170;
+}
+.cm-s-ipython span.cm-attribute {
+  color: #00c;
+}
+.cm-s-ipython span.cm-header {
+  color: blue;
+}
+.cm-s-ipython span.cm-quote {
+  color: #090;
+}
+.cm-s-ipython span.cm-link {
+  color: #00c;
+}
+.cm-s-ipython span.cm-error {
+  color: #f00;
+}
+.cm-s-ipython span.cm-tab {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAMCAYAAAAkuj5RAAAAAXNSR0IArs4c6QAAAGFJREFUSMft1LsRQFAQheHPowAKoACx3IgEKtaEHujDjORSgWTH/ZOdnZOcM/sgk/kFFWY0qV8foQwS4MKBCS3qR6ixBJvElOobYAtivseIE120FaowJPN75GMu8j/LfMwNjh4HUpwg4LUAAAAASUVORK5CYII=);
+  background-position: right;
+  background-repeat: no-repeat;
+}
+div.output_wrapper {
+  /* this position must be relative to enable descendents to be absolute within it */
+  position: relative;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  z-index: 1;
+}
+/* class for the output area when it should be height-limited */
+div.output_scroll {
+  /* ideally, this would be max-height, but FF barfs all over that */
+  height: 24em;
+  /* FF needs this *and the wrapper* to specify full width, or it will shrinkwrap */
+  width: 100%;
+  overflow: auto;
+  border-radius: 2px;
+  -webkit-box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8);
+  display: block;
+}
+/* output div while it is collapsed */
+div.output_collapsed {
+  margin: 0px;
+  padding: 0px;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+div.out_prompt_overlay {
+  height: 100%;
+  padding: 0px 0.4em;
+  position: absolute;
+  border-radius: 2px;
+}
+div.out_prompt_overlay:hover {
+  /* use inner shadow to get border that is computed the same on WebKit/FF */
+  -webkit-box-shadow: inset 0 0 1px #000;
+  box-shadow: inset 0 0 1px #000;
+  background: rgba(240, 240, 240, 0.5);
+}
+div.output_prompt {
+  color: #D84315;
+}
+/* This class is the outer container of all output sections. */
+div.output_area {
+  padding: 0px;
+  page-break-inside: avoid;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+div.output_area .MathJax_Display {
+  text-align: left !important;
+}
+div.output_area 
+div.output_area 
+div.output_area img,
+div.output_area svg {
+  max-width: 100%;
+  height: auto;
+}
+div.output_area img.unconfined,
+div.output_area svg.unconfined {
+  max-width: none;
+}
+/* This is needed to protect the pre formating from global settings such
+   as that of bootstrap */
+.output {
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+@media (max-width: 540px) {
+  div.output_area {
+    /* Old browsers */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-align: stretch;
+    display: -moz-box;
+    -moz-box-orient: vertical;
+    -moz-box-align: stretch;
+    display: box;
+    box-orient: vertical;
+    box-align: stretch;
+    /* Modern browsers */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+div.output_area pre {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  color: black;
+  background-color: transparent;
+  border-radius: 0;
+}
+/* This class is for the output subarea inside the output_area and after
+   the prompt div. */
+div.output_subarea {
+  overflow-x: auto;
+  padding: 0.4em;
+  /* Old browsers */
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  box-flex: 1;
+  /* Modern browsers */
+  flex: 1;
+  max-width: calc(100% - 14ex);
+}
+div.output_scroll div.output_subarea {
+  overflow-x: visible;
+}
+/* The rest of the output_* classes are for special styling of the different
+   output types */
+/* all text output has this class: */
+div.output_text {
+  text-align: left;
+  color: #000;
+  /* This has to match that of the the CodeMirror class line-height below */
+  line-height: 1.21429em;
+}
+/* stdout/stderr are 'text' as well as 'stream', but execute_result/error are *not* streams */
+div.output_stderr {
+  background: #fdd;
+  /* very light red background for stderr */
+}
+div.output_latex {
+  text-align: left;
+}
+/* Empty output_javascript divs should have no height */
+div.output_javascript:empty {
+  padding: 0;
+}
+.js-error {
+  color: darkred;
+}
+/* raw_input styles */
+div.raw_input_container {
+  line-height: 1.21429em;
+  padding-top: 5px;
+}
+pre.raw_input_prompt {
+  /* nothing needed here. */
+}
+input.raw_input {
+  font-family: monospace;
+  font-size: inherit;
+  color: inherit;
+  width: auto;
+  /* make sure input baseline aligns with prompt */
+  vertical-align: baseline;
+  /* padding + margin = 0.5em between prompt and cursor */
+  padding: 0em 0.25em;
+  margin: 0em 0.25em;
+}
+input.raw_input:focus {
+  box-shadow: none;
+}
+p.p-space {
+  margin-bottom: 10px;
+}
+div.output_unrecognized {
+  padding: 5px;
+  font-weight: bold;
+  color: red;
+}
+div.output_unrecognized a {
+  color: inherit;
+  text-decoration: none;
+}
+div.output_unrecognized a:hover {
+  color: inherit;
+  text-decoration: none;
+}
+.rendered_html {
+  color: #000;
+  /* any extras will just be numbers: */
+}
+
+
+
+.rendered_html :link {
+  text-decoration: underline;
+}
+.rendered_html :visited {
+  text-decoration: underline;
+}
+
+
+
+
+
+
+.rendered_html h1:first-child {
+  margin-top: 0.538em;
+}
+.rendered_html h2:first-child {
+  margin-top: 0.636em;
+}
+.rendered_html h3:first-child {
+  margin-top: 0.777em;
+}
+.rendered_html h4:first-child {
+  margin-top: 1em;
+}
+.rendered_html h5:first-child {
+  margin-top: 1em;
+}
+.rendered_html h6:first-child {
+  margin-top: 1em;
+}
+
+
+
+
+
+
+
+
+.rendered_html * + ul {
+  margin-top: 1em;
+}
+.rendered_html * + ol {
+  margin-top: 1em;
+}
+
+
+.rendered_html pre,
+
+
+
+.rendered_html tr,
+.rendered_html th,
+
+.rendered_html td,
+
+
+.rendered_html * + table {
+  margin-top: 1em;
+}
+
+.rendered_html * + p {
+  margin-top: 1em;
+}
+
+.rendered_html * + img {
+  margin-top: 1em;
+}
+.rendered_html img,
+
+.rendered_html img.unconfined,
+
+div.text_cell {
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+@media (max-width: 540px) {
+  div.text_cell > div.prompt {
+    display: none;
+  }
+}
+div.text_cell_render {
+  /*font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;*/
+  outline: none;
+  resize: none;
+  width: inherit;
+  border-style: none;
+  padding: 0.5em 0.5em 0.5em 0.4em;
+  color: #000;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+a.anchor-link:link {
+  text-decoration: none;
+  padding: 0px 20px;
+  visibility: hidden;
+}
+h1:hover .anchor-link,
+h2:hover .anchor-link,
+h3:hover .anchor-link,
+h4:hover .anchor-link,
+h5:hover .anchor-link,
+h6:hover .anchor-link {
+  visibility: visible;
+}
+.text_cell.rendered .input_area {
+  display: none;
+}
+.text_cell.rendered 
+.text_cell.unrendered .text_cell_render {
+  display: none;
+}
+.cm-header-1,
+.cm-header-2,
+.cm-header-3,
+.cm-header-4,
+.cm-header-5,
+.cm-header-6 {
+  font-weight: bold;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.cm-header-1 {
+  font-size: 185.7%;
+}
+.cm-header-2 {
+  font-size: 157.1%;
+}
+.cm-header-3 {
+  font-size: 128.6%;
+}
+.cm-header-4 {
+  font-size: 110%;
+}
+.cm-header-5 {
+  font-size: 100%;
+  font-style: italic;
+}
+.cm-header-6 {
+  font-size: 100%;
+  font-style: italic;
+}
+</style>
+<style type="text/css">.highlight .hll { background-color: #ffffcc }
+.highlight  { background: #f8f8f8; }
+.highlight .c { color: #408080; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #408080; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight .cpf { color: #408080; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gr { color: #FF0000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #00A000 } /* Generic.Inserted */
+.highlight .go { color: #888888 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #7D9029 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #A0A000 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style>
+<style type="text/css">
+/* Temporary definitions which will become obsolete with Notebook release 5.0 */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+</style>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Citibike-Data-:-First-Steps-and-Analysis">Citibike Data : First Steps and Analysis<a class="anchor-link" href="#Citibike-Data-:-First-Steps-and-Analysis">¶</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [36]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">googlemaps</span>
+<span class="kn">import</span> <span class="nn">config</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">'ggplot'</span><span class="p">)</span> 
+
+<span class="n">gmaps</span> <span class="o">=</span> <span class="n">googlemaps</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">gmaps_api_key</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [3]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Read text file into pandas. By observation, use new line as separator declare no header so first line is read as data.</span>
+<span class="n">trips_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'trips.txt'</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<span class="c1"># Convert df from number_of_trips*5 by 1 to number_of_trips by 5</span>
+<span class="n">trips_df</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">trips_df</span><span class="o">.</span><span class="n">values</span><span class="p">,(</span><span class="nb">round</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">trips_df</span><span class="p">)</span><span class="o">/</span><span class="mi">5</span><span class="p">),</span> <span class="mi">5</span><span class="p">)),</span> 
+                         <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'start_time'</span><span class="p">,</span><span class="s1">'start_loc'</span><span class="p">,</span><span class="s1">'end_time'</span><span class="p">,</span><span class="s1">'end_loc'</span><span class="p">,</span><span class="s1">'duration'</span><span class="p">]))</span>
+
+<span class="c1"># Convert strings of times to datetimes</span>
+<span class="n">trips_df</span><span class="p">[[</span><span class="s1">'start_time'</span><span class="p">,</span><span class="s1">'end_time'</span><span class="p">]]</span> <span class="o">=</span> <span class="n">trips_df</span><span class="p">[[</span><span class="s1">'start_time'</span><span class="p">,</span><span class="s1">'end_time'</span><span class="p">]]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">)</span>
+
+<span class="c1"># Replace imported duration time with datetime calculated from start and end times.</span>
+<span class="n">trips_df</span><span class="p">[</span><span class="s1">'duration'</span><span class="p">]</span> <span class="o">=</span> <span class="n">trips_df</span><span class="p">[</span><span class="s1">'end_time'</span><span class="p">]</span> <span class="o">-</span> <span class="n">trips_df</span><span class="p">[</span><span class="s1">'start_time'</span><span class="p">]</span>
+
+<span class="n">trips_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt output_prompt">Out[3]:</div>
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>start_time</th>
+<th>start_loc</th>
+<th>end_time</th>
+<th>end_loc</th>
+<th>duration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>2018-04-28 14:24:58</td>
+<td>Bond St & Fulton St</td>
+<td>2018-04-28 15:12:36</td>
+<td>11 St & 35 Ave</td>
+<td>00:47:38</td>
+</tr>
+<tr>
+<th>1</th>
+<td>2018-04-24 08:09:43</td>
+<td>1 Ave & E 68 St</td>
+<td>2018-04-24 08:29:39</td>
+<td>E 19 St & 3 Ave</td>
+<td>00:19:56</td>
+</tr>
+<tr>
+<th>2</th>
+<td>2018-04-23 08:20:09</td>
+<td>Bond St & Fulton St</td>
+<td>2018-04-23 08:46:25</td>
+<td>E 19 St & 3 Ave</td>
+<td>00:26:16</td>
+</tr>
+<tr>
+<th>3</th>
+<td>2018-04-18 17:55:20</td>
+<td>E 19 St & 3 Ave</td>
+<td>2018-04-18 18:25:50</td>
+<td>Bond St & Fulton St</td>
+<td>00:30:30</td>
+</tr>
+<tr>
+<th>4</th>
+<td>2018-04-14 18:35:31</td>
+<td>Central Park West & W 85 St</td>
+<td>2018-04-14 18:47:31</td>
+<td>E 71 St & 1 Ave</td>
+<td>00:12:00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [4]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Count number of trips that start and end at same station. For these trips, assume no meaningful travel. Sum durations for later reporting.</span>
+<span class="n">non_trips</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">trips_df</span><span class="p">[</span><span class="s1">'start_loc'</span><span class="p">]</span> <span class="o">==</span> <span class="n">trips_df</span><span class="p">[</span><span class="s1">'end_loc'</span><span class="p">])</span>
+<span class="n">non_trips_time</span> <span class="o">=</span> <span class="n">trips_df</span><span class="p">[</span><span class="n">trips_df</span><span class="p">[</span><span class="s1">'start_loc'</span><span class="p">]</span> <span class="o">==</span> <span class="n">trips_df</span><span class="p">[</span><span class="s1">'end_loc'</span><span class="p">]][</span><span class="s1">'duration'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="c1"># Drop these trips, reset index.</span>
+<span class="n">trips_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">trips_df</span><span class="p">[</span><span class="n">trips_df</span><span class="p">[</span><span class="s1">'start_loc'</span><span class="p">]</span> <span class="o">==</span> <span class="n">trips_df</span><span class="p">[</span><span class="s1">'end_loc'</span><span class="p">]]</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">trips_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">drop</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Append city and state to locations to avoid ambiguity.</span>
+
+<span class="n">trips_df</span><span class="p">[[</span><span class="s1">'start_loc'</span><span class="p">,</span><span class="s1">'end_loc'</span><span class="p">]]</span> <span class="o">=</span> <span class="n">trips_df</span><span class="p">[[</span><span class="s1">'start_loc'</span><span class="p">,</span><span class="s1">'end_loc'</span><span class="p">]]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s2">", New York, NY"</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [5]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">trips_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt output_prompt">Out[5]:</div>
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>start_time</th>
+<th>start_loc</th>
+<th>end_time</th>
+<th>end_loc</th>
+<th>duration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>2018-04-28 14:24:58</td>
+<td>Bond St & Fulton St, New York, NY</td>
+<td>2018-04-28 15:12:36</td>
+<td>11 St & 35 Ave, New York, NY</td>
+<td>00:47:38</td>
+</tr>
+<tr>
+<th>1</th>
+<td>2018-04-24 08:09:43</td>
+<td>1 Ave & E 68 St, New York, NY</td>
+<td>2018-04-24 08:29:39</td>
+<td>E 19 St & 3 Ave, New York, NY</td>
+<td>00:19:56</td>
+</tr>
+<tr>
+<th>2</th>
+<td>2018-04-23 08:20:09</td>
+<td>Bond St & Fulton St, New York, NY</td>
+<td>2018-04-23 08:46:25</td>
+<td>E 19 St & 3 Ave, New York, NY</td>
+<td>00:26:16</td>
+</tr>
+<tr>
+<th>3</th>
+<td>2018-04-18 17:55:20</td>
+<td>E 19 St & 3 Ave, New York, NY</td>
+<td>2018-04-18 18:25:50</td>
+<td>Bond St & Fulton St, New York, NY</td>
+<td>00:30:30</td>
+</tr>
+<tr>
+<th>4</th>
+<td>2018-04-14 18:35:31</td>
+<td>Central Park West & W 85 St, New York, NY</td>
+<td>2018-04-14 18:47:31</td>
+<td>E 71 St & 1 Ave, New York, NY</td>
+<td>00:12:00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [6]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Group and count rows where start_loc and end_loc have the same values. Reset index and rename column to be count.</span>
+<span class="c1"># Create a unique df so as to minimize the number of hits on the Google Maps API.</span>
+
+<span class="n">unique</span> <span class="o">=</span> <span class="n">trips_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">'start_loc'</span><span class="p">,</span><span class="s1">'end_loc'</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span><span class="s1">'count'</span><span class="p">})</span>
+<span class="n">unique</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt output_prompt">Out[6]:</div>
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>start_loc</th>
+<th>end_loc</th>
+<th>count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>1 Ave & E 16 St, New York, NY</td>
+<td>Duffield St & Willoughby St, New York, NY</td>
+<td>1</td>
+</tr>
+<tr>
+<th>1</th>
+<td>1 Ave & E 68 St, New York, NY</td>
+<td>E 17 St & Broadway, New York, NY</td>
+<td>1</td>
+</tr>
+<tr>
+<th>2</th>
+<td>1 Ave & E 68 St, New York, NY</td>
+<td>E 19 St & 3 Ave, New York, NY</td>
+<td>14</td>
+</tr>
+<tr>
+<th>3</th>
+<td>1 Ave & E 68 St, New York, NY</td>
+<td>E 20 St & Park Ave, New York, NY</td>
+<td>2</td>
+</tr>
+<tr>
+<th>4</th>
+<td>1 Ave & E 68 St, New York, NY</td>
+<td>E 44 St & 2 Ave, New York, NY</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [7]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Define function that will use Google Maps API to retrieve assumed routes for all unique trips.</span>
+
+<span class="k">def</span> <span class="nf">get_bike_directions</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+    <span class="n">origin</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">'start_loc'</span><span class="p">]</span>
+    <span class="n">destination</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">'end_loc'</span><span class="p">]</span>
+    <span class="n">mode</span> <span class="o">=</span> <span class="s2">"bicycling"</span>
+    <span class="k">return</span> <span class="n">gmaps</span><span class="o">.</span><span class="n">directions</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+
+<span class="n">directions</span> <span class="o">=</span> <span class="n">unique</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">get_bike_directions</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [9]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">unique</span><span class="p">[</span><span class="s1">'directions'</span><span class="p">]</span> <span class="o">=</span> <span class="n">directions</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [10]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Parse returned JSON to extract overall distance and overall duration of route.</span>
+
+<span class="n">unique</span><span class="p">[</span><span class="s1">'dist'</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique</span><span class="p">[</span><span class="s1">'directions'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"legs"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">'distance'</span><span class="p">][</span><span class="s1">'text'</span><span class="p">])</span>
+<span class="n">unique</span><span class="p">[</span><span class="s1">'google_time'</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique</span><span class="p">[</span><span class="s1">'directions'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"legs"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">'duration'</span><span class="p">][</span><span class="s1">'text'</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [11]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">unique</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt output_prompt">Out[11]:</div>
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>start_loc</th>
+<th>end_loc</th>
+<th>count</th>
+<th>directions</th>
+<th>dist</th>
+<th>google_time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>1 Ave & E 16 St, New York, NY</td>
+<td>Duffield St & Willoughby St, New York, NY</td>
+<td>1</td>
+<td>[{'bounds': {'northeast': {'lat': 40.7333362, ...</td>
+<td>3.6 mi</td>
+<td>22 mins</td>
+</tr>
+<tr>
+<th>1</th>
+<td>1 Ave & E 68 St, New York, NY</td>
+<td>E 17 St & Broadway, New York, NY</td>
+<td>1</td>
+<td>[{'bounds': {'northeast': {'lat': 40.7652381, ...</td>
+<td>3.5 mi</td>
+<td>20 mins</td>
+</tr>
+<tr>
+<th>2</th>
+<td>1 Ave & E 68 St, New York, NY</td>
+<td>E 19 St & 3 Ave, New York, NY</td>
+<td>14</td>
+<td>[{'bounds': {'northeast': {'lat': 40.7652381, ...</td>
+<td>3.1 mi</td>
+<td>17 mins</td>
+</tr>
+<tr>
+<th>3</th>
+<td>1 Ave & E 68 St, New York, NY</td>
+<td>E 20 St & Park Ave, New York, NY</td>
+<td>2</td>
+<td>[{'bounds': {'northeast': {'lat': 40.7652381, ...</td>
+<td>3.5 mi</td>
+<td>20 mins</td>
+</tr>
+<tr>
+<th>4</th>
+<td>1 Ave & E 68 St, New York, NY</td>
+<td>E 44 St & 2 Ave, New York, NY</td>
+<td>1</td>
+<td>[{'bounds': {'northeast': {'lat': 40.7652381, ...</td>
+<td>1.8 mi</td>
+<td>10 mins</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [12]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">trips_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">trips_df</span><span class="p">,</span> <span class="n">unique</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="s1">'start_loc'</span><span class="p">,</span><span class="s1">'end_loc'</span><span class="p">],</span> <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s1">'start_loc'</span><span class="p">,</span><span class="s1">'end_loc'</span><span class="p">])</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'count'</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [13]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">trips_df</span><span class="p">[</span><span class="s1">'dist'</span><span class="p">]</span> <span class="o">=</span> <span class="n">trips_df</span><span class="p">[</span><span class="s1">'dist'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="n">x</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [14]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">trips_df</span> <span class="o">=</span> <span class="n">trips_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">'dist'</span><span class="p">:</span><span class="s1">'dist_miles'</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [15]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">trips_df</span><span class="p">[</span><span class="s1">'speed_mph'</span><span class="p">]</span> <span class="o">=</span> <span class="n">trips_df</span><span class="p">[</span><span class="s1">'dist_miles'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">trips_df</span><span class="p">[</span><span class="s1">'duration'</span><span class="p">]</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'h'</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [16]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">trips_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt output_prompt">Out[16]:</div>
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>start_time</th>
+<th>start_loc</th>
+<th>end_time</th>
+<th>end_loc</th>
+<th>duration</th>
+<th>directions</th>
+<th>dist_miles</th>
+<th>google_time</th>
+<th>speed_mph</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>2018-04-28 14:24:58</td>
+<td>Bond St & Fulton St, New York, NY</td>
+<td>2018-04-28 15:12:36</td>
+<td>11 St & 35 Ave, New York, NY</td>
+<td>00:47:38</td>
+<td>[{'bounds': {'northeast': {'lat': 40.7628454, ...</td>
+<td>7.5</td>
+<td>43 mins</td>
+<td>9.447166</td>
+</tr>
+<tr>
+<th>1</th>
+<td>2018-04-24 08:09:43</td>
+<td>1 Ave & E 68 St, New York, NY</td>
+<td>2018-04-24 08:29:39</td>
+<td>E 19 St & 3 Ave, New York, NY</td>
+<td>00:19:56</td>
+<td>[{'bounds': {'northeast': {'lat': 40.7652381, ...</td>
+<td>3.1</td>
+<td>17 mins</td>
+<td>9.331104</td>
+</tr>
+<tr>
+<th>2</th>
+<td>2018-04-23 08:20:09</td>
+<td>Bond St & Fulton St, New York, NY</td>
+<td>2018-04-23 08:46:25</td>
+<td>E 19 St & 3 Ave, New York, NY</td>
+<td>00:26:16</td>
+<td>[{'bounds': {'northeast': {'lat': 40.7363809, ...</td>
+<td>4.2</td>
+<td>25 mins</td>
+<td>9.593909</td>
+</tr>
+<tr>
+<th>3</th>
+<td>2018-04-18 17:55:20</td>
+<td>E 19 St & 3 Ave, New York, NY</td>
+<td>2018-04-18 18:25:50</td>
+<td>Bond St & Fulton St, New York, NY</td>
+<td>00:30:30</td>
+<td>[{'bounds': {'northeast': {'lat': 40.736971, '...</td>
+<td>4.0</td>
+<td>23 mins</td>
+<td>7.868852</td>
+</tr>
+<tr>
+<th>4</th>
+<td>2018-04-14 18:35:31</td>
+<td>Central Park West & W 85 St, New York, NY</td>
+<td>2018-04-14 18:47:31</td>
+<td>E 71 St & 1 Ave, New York, NY</td>
+<td>00:12:00</td>
+<td>[{'bounds': {'northeast': {'lat': 40.784612, '...</td>
+<td>3.1</td>
+<td>20 mins</td>
+<td>15.500000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [17]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">num_bins</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">trips_df</span><span class="p">[</span><span class="s1">'speed_mph'</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">num_bins</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Speeds (mph)'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Number of Rides'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Histogram of Ride Speeds'</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+" />
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [18]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Based on histogram above, assume that rides over 20 mph are erroneous -- i.e., I took a shortcut down a one-way compared</span>
+<span class="c1"># to what Google suggested, or, for the > 20 mph ride, the address/pathfinding is wrong because of Brooklyn vs NY, NY.</span>
+<span class="n">trips_df</span> <span class="o">=</span> <span class="n">trips_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">trips_df</span><span class="p">[</span><span class="n">trips_df</span><span class="o">.</span><span class="n">speed_mph</span> <span class="o">></span> <span class="mi">12</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [37]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">num_bins</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">trips_df</span><span class="p">[</span><span class="s1">'speed_mph'</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">num_bins</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Speeds (mph)'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Number of Rides'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Histogram of Ride Speeds'</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAjgAAAGECAYAAAA7lVplAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAADl0RVh0U29mdHdhcmUAbWF0cGxvdGxpYiB2ZXJzaW9uIDIuMS4yLCBodHRwOi8vbWF0cGxvdGxpYi5vcmcvNQv5yAAAIABJREFUeJzt3Xt8zvX/x/Hndu1oMzsRlxFaRA6T02KqH8L3p+RbQ3SSDF+HkejnVA59lcM3p6GkIumHoVTqq4ND/NSEnMohWtgsbGa2mZm5rt8f3Vxfa5trZtd18dnjfrt1a9fn+nze79fnvWvb0/tzcrNarVYBAAAYiLurCwAAAChrBBwAAGA4BBwAAGA4BBwAAGA4BBwAAGA4BBwAAGA4BBzgFtK3b1+9/vrrri7jlrFjxw61a9dOERERN9WOvXF95plnNHny5Jvq41aTnJysevXqaf/+/a4uBXAJD1cXAJQH7dq101NPPaUXXnihwPL9+/crOjpaGzZsUFhYmN5///0St/nxxx+rTZs2uuOOO8q63FvGkiVLVKtWLX3zzTdFvt+uXTudPn1a7u7/+bdaYGCgWrZsqREjRqh69eqSdEPjWhr79u3TW2+9pf379ysjI0N+fn5q06aNRowYobCwMIf2DaBozOAAtyGLxaI33nhDZ86ccXUpDpWZmalatWrJZDIVu86IESO0f/9+23/x8fHKycnRgAEDdOXKFYfXePLkST333HOqX7++Pv/8c+3fv19r1qxRTk6O+vbt65QaABRGwAFuIdceKklPT1dsbKxatWqlpk2b6oknnlBCQoIkqXHjxsrMzFSvXr00YcIESdKxY8cUExOjVq1aKSoqSsOHD1daWpqt7W3btql9+/aKiIjQwIEDFR8fr6ZNm0r6z+GMFStWqHXr1nr77bclSd988426deum++67T23atNHEiROVl5dXYJtNmzapa9euatKkiQYNGqS0tDQNHTpUTZs2VceOHfXjjz8Wu7+pqakaPny4oqKiFBkZqZiYGB0/flyS1L17d+3YsUMrVqxQo0aNSjyG1apV08iRI3XkyBH9/vvvhcb1ypUrmjZtmlq3bq3IyEjFxcUVamP9+vXq2rWrIiIi1K5dO61YsaLY/vbu3avc3FwNHDhQQUFBcnNzU1hYmKZMmaLY2FjbeLVr104LFy7UwIEDFRERoaioKK1du9bWTk5OjqZMmaIHH3xQERER6t27t3777bcSv5+UlKRnnnlGTZs2VZcuXbR79+4CdW7ZskV///vf1bRpU7Vq1UovvfSSMjMzSzyuwO2GgAPcombNmqULFy5ow4YN2rFjh6Kjo/Xyyy8rPz9f69evlyQtX75ckyZNUl5envr27Suz2awNGzZo3bp1unjxooYPHy7pz5mQQYMGqVu3btq+fbuefPJJzZ07t1Cf3377rdatW6cBAwYoJSVFw4YNU58+fbRr1y6tWLFCGzZs0AcffFBgm+XLl2vx4sVat26dtm3bpmeffVZ9+vTRjh071KpVK02dOrXYfRwyZIguXbqkzz77TBs3blTVqlX1wgsvKD8/X6tWrVKLFi305JNP3vB5JJcvX5Ykubm5FXrvk08+0apVq/TOO+/ou+++k9VqLdD+d999p7Fjx2rMmDHatWuXZs6cqZkzZ+qrr74qsq+77rpLVqtVs2bN0rlz52zLQ0JC9Mgjj8jX19e27IMPPtBzzz2nH3/8Uf/4xz80evRoJSUlSZLGjBmjX3/9VatWrdL27dvVunVrPf3008rNzS3R+6NHj5avr6+2bt2q9957r0Aou3z5soYNG6ZevXpp165dWr9+vTIyMrRw4cIbGlfgdkLAAZxk5syZatSoUYH/evXqVez6mZmZ8vDwkJeXlzw8PNSrVy9t2bJFHh6FT53bsmWL0tLS9PLLL8vf31+BgYF68cUXtWPHDh0/ftz2hzwmJkbe3t566KGH1KZNm0LtPProowoODpabm5vMZrO2bdumxx57TG5ubqpRo4ZatmxZKGxER0crJCRENWrU0N13361GjRqpWbNm8vDwUIcOHXT06NEi9+/QoUPas2ePxowZo+DgYFWoUEEjR47UyZMnrzvrY09ycrKmTZumhg0b6q677ir0/vr16/Xwww+rYcOG8vb21qBBg+Tj42N7f/ny5eratavuv/9+mUwmRURE6PHHH9fHH39cZH/16tXT5MmTtXr1arVp00bdu3fX1KlTtXPnzkLrRkVF6f7775eXl5d69+6tkJAQbdq0SefOndNXX32ll156SVWqVJG3t7cGDx4si8WizZs3230/LS1NO3fuVExMjPz9/VW1alU9//zztn4vXbqk3Nxc+fr6yt3dXUFBQXr33Xc1atSoUo8zcKvjJGPASUaMGFHsScZF6d+/vwYNGqS2bduqTZs2ateunTp37lxkwElOTla1atXk5+dnW3b1j3tycrJOnz6typUrF/hD3qRJE3399dcF2qlRo0aB12vXrtXKlSv1xx9/yGKxKD8/Xw888ECBdapWrWr72tfXV2az2fbax8dHly5dKnL/kpKS5OnpqZo1a9qWVapUSaGhoUpOTi5ym6LMnDlTs2fPliRZrVZZrVZ169ZNb775ZpHrnz59usBVWR4eHqpVq5bt9bFjx7R161atWbPGtsxqtap27drF1tCjRw899thj2rlzp3bt2qXvv/9eS5YsUdu2bfXWW2/Zvmd16tSxbXM1RJ4+fVrHjx+X1WrVU089VaBdi8WilJQUu++fOnVKkmwnVUtSeHi47Wt/f3/FxsZqzJgxeueddxQVFaVHH31UDRo0KHafgNsdAQe4Rd1777369ttvlZCQoC1btmjKlClatmyZPvrooxJtb7VaJf15eMJqtcrT07PA+1cP41zr2nU++eQTzZw5U7NmzdKDDz4oT09PjRo1qtB5G389DHTtFU2lYbVai6ytONcGx8TERD322GPq0KGDgoODi1w/Ly+vUI1Xx0qSvL29NWDAAMXGxt5Q3d7e3mrTpo3atGmj2NhY7dy5U0899ZQ2bNigTp06SVKhE46tVqvc3Nzk7e0tSfryyy8LhUxJOnjw4HXf/+mnnyQVHHuLxVJgnX/84x/q3r27Nm/erI0bNyo6Olrjxo0rFJoAo+AQFXCLuhok2rZtq3Hjxik+Pl67d+/WoUOHCq1bo0YNpaSkKDs727bsyJEjkqQ777xToaGhOn36tO2EV0lFtnOt3bt3q3HjxurQoYM8PT1lsVj0888/l8Wu2Wq+fPmyEhMTbcvS09N19uxZ3XnnnaVqs06dOho4cKBeeeUVnT9/vsh1qlSpoj/++MP2+vLly7aTkaU/x+tqoLjqr2N3rVWrVmnlypWFljdr1kz+/v7KycmxLTtx4oTta6vVqpMnT6patWqqUaOGTCZToe/J1fNz7L1/9VYBKSkptvd+/fXXAuump6crNDRU0dHRWrBggQYMGHDdk6eB2x0BB7hF9ejRQ7Nnz1ZOTo4sFov27t0rb29vmc1m24mrR44cUXZ2ttq2basqVapo+vTpunjxos6ePas333xTzZo1U+3atdW2bVtdvnxZS5YsUV5enrZu3aoffvjhuv3XqFFDx48fV2pqqtLT0zVlyhRVqFBBqamphWYHSuOee+5R06ZNNX36dJ0/f17Z2dmaNm2aqlevrlatWpW63f79+ysoKEhTpkwp8v2HHnpIX3/9tQ4dOqTc3FzNmzevwIxR79699d1332ndunW6fPmyjh49qqefflr/+7//W2yfU6ZM0apVq2yhNDU1VTNmzJDValXr1q1t623dulXbt29XXl6ePvroI50/f17t27eXv7+/unbtqtmzZ+vYsWPKz8/X6tWr9eijj+r06dN2369evbruvvtuvfvuu8rOztbJkyf14Ycf2vrdvXu32rdvrx9//FEWi0VZWVn67bffChwyA4yGgAPcoubMmaN9+/YpKipKzZs31+LFixUXF6egoCCFhITob3/7m1599VWNHz9eXl5emj9/vk6cOKGHHnpIjz32mKpUqaIFCxZIkkJDQzVt2jTFx8crMjJSa9euVd++fYu8yuiqXr16qWHDhurYsaOeeOIJ1a9fX2PGjLHd96UsvPnmm3Jzc1Pnzp318MMPKzs7W0uXLi10OO1GeHp66rXXXtPnn3+uDRs2FHr/2WefVZcuXdSnTx89+OCDMplMBQJVZGSkJk2apLi4ON13333q37+/HnvssWL3uXv37nrjjTe0du1a28nLXbt2VVJSklasWFHgRozdu3fXkiVL1LJlS7399tv617/+ZTuHafz48WrcuLF69uypFi1a2K70urq9vffnzp2r9PR0RUVFqX///gVOMm7atKlGjhyp8ePH2y7fd3d31/jx40s9zsCtzs167cFnAIZ1+fJlmUwm23kaCxYs0Oeff65///vfLq6sfCjubtYAHIMZHKAcuHjxou6//369/fbbys/P1/Hjx7VmzRo99NBDri4NAByCgAOUA76+voqLi9O3336r5s2b6+mnn9YDDzygIUOGuLo0AHAIDlEBAADDYQYHAAAYDgEHAAAYzm1zJ+Nrb2BlRGaz2fD7aA9jwBhIjIHEGEiMgcQYSCUbg2sfD3MtZnAAAIDhEHAAAIDhEHAAAIDhEHAAAIDhEHAAAIDhEHAAAIDhEHAAAIDhEHAAAIDhEHAAAIDhEHAAAIDhEHAAAIDhOOVZVCdOnNCMGTPUpUsXde7cWfn5+Zo/f75OnTolX19fjRgxQv7+/s4oBQAAlAMOn8HJzc3V4sWL1bBhQ9uyDRs2KCAgQG+88YZat26tQ4cOOboMAABQjjg84Hh6emrMmDEKCgqyLdu1a5fatm0rSerQoYOaN2/u6DIAAEA54vBDVCaTSSaTqcCy1NRUHThwQCtXrpSfn5/69etn9xBVcY9DN5LysI/2MAaMgcQYSOVzDJK6/Ocfu0ll3HaNL3aWcYvOUR4/B39V2jFwyjk4f2W1WhUaGqpx48ZpzZo1+uSTT/TMM89cd5uUlBQnVecaZrPZ8PtoD2PAGEiMgcQYOMLtOJ58Dko2BsUFIJdcRVWpUiXVr19fktSkSRMlJye7ogwAAGBQLgk4TZs21Z49eyRJiYmJqlatmivKAAAABuXwQ1SJiYlaunSpUlNTZTKZlJCQoNjYWC1dulRbtmyRh4eHBg8e7OgyAABAOeLwgFOnTh1NnDix0PLhw4c7umsAAFBOcSdjAABgOAQcAABgOAQcAABgOAQcAABgOAQcAABgOAQcAABgOAQcAABgOAQcAABgOAQcAABgOAQcAABgOAQcAABgOAQcAABgOAQcAABgOA5/mjgAwBiuxHR1dQlAiTGDAwAADIeAAwAADIeAAwAADIeAAwAADIeAAwAADIeAAwAADIeAAwAADIeAAwAADIeAAwAADIeAAwAADIeAAwAADIeAAwAADIeAAwAADIeAAwAADIeAAwAADMcpAefEiRMaOnSo1q9fX2D5nj171KNHD2eUAAAAyhGHB5zc3FwtXrxYDRs2LLA8Ly9Pa9euVVBQkKNLAAAA5YzDA46np6fGjBlTKMh88skn6tSpkzw8PBxdAgAAKGccni5MJpNMJlOBZSkpKTp+/Lh69uypZcuWlagds9nsiPJuKeVhH+1hDBgDiTGQSjcGSV2aO6ASY7hdP1O3a91lqbRj4JLpkw8++EDPP//8DW2TkpLioGpuDWaz2fD7aA9jwBhIjIHEGDjC7TiefA5KNgbFBSCnX0WVnp6ulJQUxcXFady4cTp37pwmTJjg7DIAAICBOX0GJzg4WHFxcbbXgwcP1qRJk5xdBgAAMDCHB5zExEQtXbpUqampMplMSkhI0MiRI+Xv7+/orgEAQDnl8IBTp04dTZw4sdj358+f7+gSAABAOcOdjAEAgOEQcAAAgOEQcAAAgOEQcAAAgOEQcAAAgOEQcAAAgOEQcAAAgOEQcAAAgOEQcAAAgOEQcAAAgOEQcAAAgOEQcAAAgOEQcAAAgOEQcAAAgOF4uLoAAABwfVdiujqsbdOizxzWtisxgwMAAAyHgAMAAAyHgAMAAAyHgAMAAAyHgAMAAAyHgAMAAAyHgAMAAAyHgAMAAAyHgAMAAAyHgAMAAAyHgAMAAAyHgAMAAAyHgAMAAAyHgAMAAAyHgAMAAAzHwxmdnDhxQjNmzFCXLl3UuXNnpaWl6a233lJ+fr48PDw0dOhQBQYGOqMUAABQDjh8Bic3N1eLFy9Ww4YNbctWrFih9u3ba9KkSWrRooXWrVvn6DIAAEA54vCA4+npqTFjxigoKMi2rF+/foqMjJQkBQQEKCsry9FlAACAcsThh6hMJpNMJlOBZT4+PpIki8Wir776StHR0XbbMZvNDqnvVlIe9tEexoAxkBgDqXRjkOSAOozidv1MXa3bkd/bW31sSlufU87BKYrFYlFcXJwaNmyoRo0a2V0/JSXFCVW5jtlsNvw+2sMYMAYSYyAxBo5wO46nsz4Ht/LYlGQMigtALruKasGCBapWrZq6d+/uqhIAAIBBuSTgbN26VR4eHurRo4crugcAAAbn8ENUiYmJWrp0qVJTU2UymZSQkKDz58/Ly8tLEydOlCSFhYWpX79+ji4FAACUEw4POHXq1LEFGQAAAGfgTsYAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwHP40cQC4nVyJ6erQ9k2LPnNo+wD+xAwOAAAwHAIOAAAwHAIOAAAwHAIOAAAwHAIOAAAwHAIOAAAwHLsBJzc3V/v27ZMk5eTkaMWKFVq5cqUuXLjg8OIAAABKw27AmT9/vg4dOiRJevfdd5WUlKQrV65o/vz5Di8OAACgNOwGnBMnTqhHjx66dOmSdu3apUGDBql37946deqUM+oDAAC4YXYDjpubmyRp7969qlOnjvz8/CRJV65ccWxlAAAApWT3UQ3169fXa6+9puTkZPXt21eStGbNGoWFhTm8OAAAgNKwG3BiYmK0Z88eBQQEKDw8XJIUEhKiTp06Obw4AACA0rB7iMrd3V1169ZVSkqK1q9fL0lq3Lix/P39HV4cAABAadgNOHv27NGwYcO0fft2ffrpp5KklStX6uOPP3Z4cQAAAKVhN+AsWbJEU6ZM0ahRo+Tj4yNJ6tu3r7Zu3erw4gAAAErDbsCxWq2qWrVqgWXe3t4OKwgAAOBm2T3J2Gw2Kz4+Xh07dpQk5eXl6auvvioUeq7nxIkTmjFjhrp06aLOnTsrLS1N8+bNk8ViUWBgoIYOHSpPT8/S7wUAAMA17M7gxMTEKDExUQMGDFBKSoqee+45HTx4UP379y9RB7m5uVq8eLEaNmxoWxYfH69OnTpp8uTJqlKlijZt2lT6PQAAAPgLuzM4wcHBGj16tC5duqScnBxVqlRJ7u4lf0anp6enxowZo7Vr19qW/fLLL4qJiZEkNW/eXOvWrbPNEAEAANysYgPOggUL7G48aNAgu+uYTCaZTKYCyy5dumQ7JBUYGKiMjAy77ZjNZrvr3O7Kwz7awxgwBpJrxyDJwe1fienq8hrKo9v15+pq3Y78TNzqY1Pa+ooNOFfPsUlLS9O+fft03333yd/fX5mZmdq9e7datmxZukr1n8c/FPe6KCkpKaXu73ZgNpsNv4/2MAaMgcQYwDFux8+Us34WbuWxKckYFBeAig04jz/+uCRp0qRJmjp1aoEb+2VmZmrmzJmlqVXSn1dh5eXlycvLS+np6QoMDCx1WwAAAH9l92SaM2fO2B6weZW/v79SU1NL3WmjRo2UkJAgSUpISFBERESp2wIAAPgruycZh4eHa/LkyWrZsqUqVKignJwc7dy5U7Vr1y5RB4mJiVq6dKlSU1NlMpmUkJCg2NhYzZ8/X99++61CQ0P14IMP3vSOAAAAXGU34AwePFibNm3SwYMHdeHCBfn5+alZs2Zq3759iTqoU6eOJk6cWGj5K6+8csPFAgAAlITdgOPl5aVOnTrx9HAAAHDbKDbgjBw5Uv/617/Uq1evYjdevny5Q4oCAAC4GcUGnLFjx0qS5s6d67RiAAAAykKxASc4OFg5OTnKysqS2Wy2PUn8qp9++kmVK1d2eIEAAAA3qtiAs3v3bs2ePVs+Pj7Kz8/X+PHjVbt2bR07dkxLly7VyZMntXDhQmfWCgAAUCLFBpyVK1dq3Lhxqlu3rhISErR06VKFhIRo9+7deuSRR/Q///M/zqwTAACgxIq90d/FixdVt25dSVJkZKR+//13hYSEaO7cufr73/8ub29vpxUJAABwI4qdwfnrE8ODgoKue0UVAADArcLuoxoAAABuN8XO4GRkZBQ4ifivryVpwIABjqsMAACglIoNOP/93/993dcAAAC3qmIDTvfu3Z1ZBwAAQJnhHBwAAGA4dh+2CQDA7e5KTFeHtm9a9JlD28eNK3YGJzs7u8D/AQAAbhfFBpxx48ZJkl555RWnFQMAAFAWij1E5eXlpUGDBun8+fMaNmxYkevMmTPHYYUBAACUVrEBZ9KkSTp+/Lji4uK43w0AALitFBtwKlSooPr162vy5MkKDQ3VmTNnlJmZqUqVKqly5crOrBEAAOCG2L2KKjMzU6+99pqys7NVoUIFZWdnKyQkRMOHD1dYWJgzagQAALghdgPOe++9p969e6tVq1a2Zf/3f/+nRYsWadKkSQ4tDgAAoDTs3ugvJyenQLiRpKioKGVmZjqsKAAAgJthN+B4eXnp119/LbDsyJEj8vb2dlhRAAAAN8PuIapnn31W06dPV0hIiPz9/ZWZmamMjAyNGDHCGfUBAADcMLsB595779X8+fN15MgR21VU4eHhzOAAAIBbVomeReXt7a2GDRs6uhYAAIAywdPEAQCA4RBwAACA4dgNOF9++aUz6gAAACgzds/B2bZtmx544AH5+/uXWae5ubmaN2+esrOzlZ+fr+joaEVERJRZ+wAAoHyzG3Bq1qypUaNGKTw8vFDIKe1DODdv3iyz2azevXsrPT1dkydP1uzZs0vVFgAAwF/ZDTjBwcFq165dmXZasWJFHT9+XJJ04cIFVaxYsUzbBwAA5Zub1Wq1lmRFq9WqrKwsBQQElEnHU6ZM0alTp3ThwgWNHj1adevWLZN2AeBmJHVp7uoSAKeq8cVOV5fgEHZncLKzs/XOO+9o586d8vPz06JFi7RkyRK1bt261KFky5YtCg0N1bhx43Ts2DEtXLhQb7zxxnW3SUlJKVVftwuz2Wz4fbSHMWAMJMYAcLZb+eetJL8PzGZzkcvtXkU1Z84c1alTR4sWLbKdgxMVFaUPPvigFKX+6fDhw2rSpIkkqVatWkpPT9eVK1dK3R4AAMC17AacU6dOqVu3bvLz87MtCw8P18WLF0vdadWqVXX06FFJUmpqqnx8fGQymUrdHgAAwLXsBhxvb28lJycXWHbmzJmbCiQPP/ywzpw5owkTJmju3LmKiYkpdVsAAAB/ZfccnCeffFKvvvqqwsPDlZGRoZkzZ+rQoUOlvkRcknx8fHgaOQAAcBi7Aad58+aaMWOGdu3apfr16ysoKEjPP/+8goKCnFEfAADADSvRs6guXLggd3d3ubm5KT8/Xzk5OY6uCwAAoNTszuCsWLFCX3/9tRo0aKAKFSooOztby5cvV5cuXfT44487o0YAAIAbYjfgbNmyRbNnzy5wg7/z589r7NixBBwAAHBLsnuIqmLFioXuXhwQEFBmdzQGAAAoa8XO4Bw+fFiS1KJFC82YMUNt27ZVQECAsrOztW3bNt1///1OKxIAAOBGFBtw5s6dW+D1sWPHCrz+7bff1LVrV4cUBQAAcDOKDTjz5893Zh0AAABlxu5Jxqmpqdq0aZPS09NlsVgKvDdo0CCHFQYAAFBadgPO1KlTVb16ddWsWVPu7iW6bQ4AAIBL2Q04FouFxyoAAIDbit0pmbZt22rLli3Ky8tzRj0AAAA3ze4Mjp+fnxYtWlTkSccrV650SFEAAAA3w27AWb16tV588UXOwQEAALcNuwHnjjvuUEREBOEGwC3jSgz34ALKiqN/nkyLPnNo+8WxG3CaN2+u6dOnq1mzZvL19S3wXlRUlMMKAwAAKC27AWfv3r2SpO+//77QewQcAABwK7IbcCZMmOCMOgAAAMqM3YCzcOHCYt8bMGBAmRYDAABQFuyeORwcHFzgPy8vLx04cECVKlVyRn0AAAA3zO4MTvfu3Qsty8zM5GGcAADgllWqa78rVqyolJSUsq4FAACgTNidwXn77bfl5uZme22xWJSUlKTQ0FCHFgYAAFBadgNOSEhIgdfu7u6qV6+eIiMjHVYUAADAzSjVOTgAAAC3smIDzqRJk667oZubm1599dUyLwgAAOBmFRtwipu5OXfunFatWqX8/HyHFQUAAHAzig04DRo0KPA6Pz9fn3/+udavX6/OnTvrkUcecXhxAAAApWH3HBxJ2r59u5YtW6YGDRpo2rRpCgwMdHRdAAAApXbdgHPs2DEtWbJEkjRixAjVrl3bGTUBAADclGIDzsKFC3XgwAH16tXLIZeEb926VZ999pnc3d3Vs2dP3XfffWXeBwAAKJ+KDTgbN26UJM2aNavYjVeuXFmqTrOysrR69WpNnTpVubm5io+PJ+AAAIAyU2zAKW14KYn9+/erUaNG8vX1la+vL08lBwAAZcrNarVand3p2rVrlZqaquzsbJ07d07du3dXo0aNnF0GDC6pS3OHtl/ji50ObR/Fc/T3FkDZcdXvyhJdReUIZ8+e1ahRo5SamqpJkyZpwYIFBZ559VdGf7in2Ww2/D7ac7uNgSNqvd3GwBEYA8BYbubnuSS/D8xmc5HLS/U08ZtVqVIl1atXTyaTSVWrVpWvr68yMzNdUQoAADAglwScJk2a6Oeff5bFYlFmZqZyc3NVsWJFV5QCAAAMyCWHqIKDgxUZGanJkyfr0qVL6tu3r9zdXZK1AACAAbnsHJyHH35YDz/8sKu6BwAABsa0CQAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBzoRKL6AAAQ1klEQVQCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMByXBpy8vDwNGTJEmzdvdmUZAADAYFwacNasWaOKFSu6sgQAAGBALgs4J0+eVHJyspo2beqqEgAAgEG5LOAsXbpUzz33nKu6BwAABubhik6/++471a1bV1WqVCnxNmaz2YEV3RrKwz7aU5ZjkFRmLRXtSkzXMm/z2pprfLGzzNu39dOlucPalm6+dnufA0d/bwGUnZv9vV7a7V0ScH766SedOXNGP/30k86ePStPT08FBwercePGxW6TkpLixAqdz2w2G34f7WEMCrqdx+JmaudzABiLo38fFBeAXBJwXnzxRdvX8fHxqlKlynXDDQAAwI3gPjgAAMBwXDKDc60ePXq4ugQAAGAwzOAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADD8XBVx8uWLdPBgwdlsVjUrVs3tWrVylWlAAAAg3FJwPn555+VlJSkKVOmKCsrSy+//DIBBwAAlBmXBJwGDRooPDxckuTn56dLly7JYrHI3Z0jZgAA4Oa5JOC4u7vLx8dHkrRx40Y1bdrUbrgxm80OqyepS3OHtS1JNb7YWaL1HLmPt4uyHIOkMmvJNRz6mXdYy3+6EtO11Nve7t83AAXd7O+y0m7vsnNwJGnHjh3auHGjxo8fb3fdlJQUJ1TkGCWp3Ww239b7WBYYg4IYCwBGcDO/y0ryd6G4AOSyY0J79uzRxx9/rLFjx6pChQquKgMAABiQSwJOTk6Oli1bptGjR8vf398VJQAAAANzySGq77//XllZWZo1a5Zt2ZAhQxQaGuqKcgAAgMG4JOB06NBBHTp0cEXXAACgHOC6bAAAYDgEHAAAYDgEHAAAYDgEHAAAYDgEHAAAYDgEHAAAYDgEHAAAYDgEHAAAYDgEHAAAYDgEHAAAYDgEHAAAYDgEHAAAYDgEHAAAYDgueZo4ys6VmK6uLqHMJLm6gFuMkb63AOBszOAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADDIeAAAADD8XBVx0uWLNGRI0fk5uamPn36KDw83FWlAAAAg3HJDM6BAwd06tQpTZkyRQMHDtT777/vijIAAIBBuSTg7N+/Xy1atJAkhYWF6cKFC8rJyXFFKQAAwIBccogqIyNDderUsb2uVKmSMjIyVKFChWK3MZvNjivoi52Oa/sGlGofb5HaAQBwhNL+/XfJDI7Vai302s3NzRWlAAAAA3JJwAkODlZGRobt9blz5xQYGOiKUgAAgAG5JOA0adJECQkJkqTff/9dQUFB8vX1dUUpAADAgNysfz1e5CQfffSRDh48KDc3N73wwguqVauWK8oAAAAG5LKAAwAA4CjcyRgAABgOAQcAABiOyx7VACkxMVHTp09X1apVJUk1a9ZU3759XVyV823dulWfffaZ3N3d1bNnT913332uLsmpNm7cqC1btthe//bbb/rwww9dWJHz5ebmat68ecrOzlZ+fr6io6MVERHh6rKcymKxaNGiRUpKSpKHh4diYmJUvXp1V5flNCdOnNCMGTPUpUsXde7cWWlpaZo3b54sFosCAwM1dOhQeXp6urpMh/rrGEjSv//9by1dulSLFy+Wj4+Piyt0vKI+B2+99Zby8/Pl4eGhoUOHlviqawKOC+Xm5ioyMlJ9+vRxdSkuk5WVpdWrV2vq1KnKzc1VfHx8uQs47dq1U7t27ST9+RiT77//3sUVOd/mzZtlNpvVu3dvpaena/LkyZo9e7ary3KqnTt3KicnR//85z916tQpLVmyRKNHj3Z1WU6Rm5urxYsXq2HDhrZl8fHx6tSpk+6//34tW7ZMmzZtUseOHV1YpWMVNQbfffedMjIyFBQU5MLKnKeoMVixYoXat2+v1q1ba/369Vq3bp2efvrpErXHISoXunjxoqtLcLn9+/erUaNG8vX1VVBQkAYMGODqklxq9erVio6OdnUZTlexYkVlZWVJki5cuKCKFSu6uCLn++OPP2wPHa5atapSU1NlsVhcXJVzeHp6asyYMQX+kP/yyy9q3ry5JKl58+bat2+fq8pziqLGoGXLlurVq1e5uRFuUWPQr18/RUZGSpICAgJsvydKgoDjQrm5uTp06JBef/11TZgwQT///LOrS3K6M2fOyGq1atasWXr11Ve1f/9+V5fkMkePHlVISEi5vOllmzZtlJaWpqFDh2rChAl65plnXF2S09WsWVN79+6VxWJRSkqKzpw5o8zMTFeX5RQmk0leXl4Fll26dMl2SCowMLDAzWGNqKgxKG/3hytqDHx8fOTu7i6LxaKvvvpKUVFRJW6PgONCd955p6KjozV27FgNGDBA8+fPV35+vqvLcrqzZ88qNjZWgwYN0oIFCwo9yqO82Lhxox566CFXl+ESW7ZsUWhoqOLi4vTqq69q8eLFri7J6Zo2barw8HBNmDBBX3zxRbk6/6Yof521KC+zGCjMYrEoLi5ODRs2VKNGjUq8HefguFBYWJjCwsIk/fkwscDAQKWnp6tKlSoursx5KlWqpHr16slkMqlq1ary9fVVZmamKlWq5OrSnO6XX34plyeZS9Lhw4fVpEkTSVKtWrWUnp6uK1euyGQyubgy53ryySdtXw8dOlQBAQEurMa1vL29lZeXJy8vL6Wnp5fLmU38acGCBapWrZq6d+9+Q9sxg+NCGzdu1Jdffinpzyesnz9/XsHBwS6uyrmaNGmin3/+WRaLRZmZmcrNzS2X51+kp6fLx8dHHh7l898cVatW1dGjRyVJqamp8vHxKXfh5tixY1qwYIEkac+ePapdu7bc3cvvr+hGjRrZHumTkJBQ7q6qw5+2bt0qDw8P9ejR44a35U7GLpSdna24uDjl5ubq8uXLio6OLndXEEnSN998o23btunSpUt64oknbCcWlieJiYlasWKFxo4d6+pSXCI3N1cLFizQ+fPnZbFY1LNnzwJXUpQHFotFb731llJSUuTn56fBgweXm5nMxMRELV26VKmpqTKZTAoODlZsbKzmz5+vy5cvKzQ0VIMGDTL0PwCKGoPGjRtr3759OnLkiO666y7VrVu3xFcQ3Y6KGoPz58/Ly8vLdj5SWFiY+vXrV6L2CDgAAMBwyu/8JwAAMCwCDgAAMBwCDgAAMBwCDgAAMBwCDgAAMBzjXnMHoEwkJiZq2bJlSk9Pl9Vqlb+/v5555hndc889Du97zZo1OnXqlAYPHnxD282aNUsRERH6r//6r5uuYeLEiWrXrp0eeOCBAsu//vprHT58WEOHDr3pPgCUPWZwABTLarVq2rRpeuSRRzR79mzNmTNHXbt21fTp03Xp0iVXl1ek77//Xjk5OWUSbq6nY8eOSktL044dOxzaD4DSYQYHQLGysrJ07tw53X333bZlrVq1Unh4uLy9vbV582b98MMP8vf316+//ip/f3/FxsaqWrVqysnJ0XvvvaejR4/qypUreuKJJ2yh49ChQ/rggw+UnZ2tgIAAxcbG6o477lBeXp7mz5+vI0eOqHLlygWex/TDDz9o9erVslgsMplMev7553XvvfcWqnn16tW2R15s3rxZu3btkqenpw4ePCiz2azo6Gh99NFHOn36tHr27KkOHTooPj5eqampysrKUnJysqpUqaJhw4bZbrR35swZTZw4UX/88Yfq16+v2NhYubu7q1u3blqxYoVatGjhyG8DgFJgBgdAsSpWrKi77rpLkyZN0saNG3XmzBlJUkhIiG2dffv2qVOnToqLi1OTJk20bNkySdLy5cvl5uamWbNm6fXXX1d8fLxOnDih3NxczZw5U7169VJcXJz+9re/adasWZKkTZs2KSMjQ3FxcRo5cqT27t1r6+fdd9/V6NGjNWvWLPXr1087d+4sVG9ycrLOnTunBg0a2Jbt3btX0dHRmjt3rk6ePKnPPvtMkydP1sCBA7VmzRrbej/++KP69u2refPmKSgoSJ988ontvQMHDmjs2LGaM2eOfvnlFx0+fFiS1LhxY/3xxx86depUWQw3gDJEwAFQLDc3N73yyitq2bKlvvzySw0ZMkQjRozQ9u3bbeuEhYWpbt26kv6c3fn1118l/Tnj0rFjR7m7uysgIECtWrXSjz/+qAMHDsjX11eNGzeWJEVFRenUqVNKS0vTwYMH1apVK5lMJlWsWFHNmjWz9VOpUiV98803Sk1N1T333KPnnnuuUL1Hjx5VnTp1CjzDKSwsTGazWZ6enqpWrZqaNGkid3d31axZU+np6bb17r33XtuDbq/dj6uvvby85OPjo2rVquns2bOSJJPJpDp16hRYF8CtgUNUAK6rQoUK6tGjh3r06KGMjAxt3rxZs2fP1owZMyRJ/v7+tnX9/PyUnZ0tSbpw4YLi4uJsD83My8tTZGSkcnJylJ6eruHDh9u28/T0VGZmprKzs1WhQoUC7V28eFGS9PLLL+vjjz/W6NGjFRISoj59+hSYqZGk8+fPF3p+09Vn2EiSu7u7fHx8bF9f+6Sav+7HhQsXim3DYrHYXgcEBCgzM/P6gwjA6Qg4AIp19uxZ24yJJAUGBqpbt2764YcflJycLEkF/rhnZ2fbgkJwcLBGjRqlmjVrFmjzl19+UfXq1TV16tRC/fn5+SknJ8f2+tq2q1atqkGDBslisWjLli2aM2eOFi5cWGD7m3m0XnH7AeD2xCEqAMU6e/asZsyYocTERNuyo0ePKi0tTXfddZckKSUlRb///rskKSEhQfXr15ckNWvWTN98840k6cqVK1qyZIkSExN1991369y5czpy5Igk6fTp04qLi5PValXdunW1c+dOWSwWZWZmavfu3ZL+DB+vvfaacnJy5O7urrvvvltubm6F6q1UqVKpZ1MOHz6stLQ0236U9DL4rKwsBQQElKpPAI7DDA6AYtWtW1f9+/fXokWLlJOTI4vFosDAQL344ouqXLmyJKlevXr64osvdPjwYfn7+9sOPT355JN67733NGzYMElSkyZNVKtWLbm7u+ull17S+++/r9zcXHl4eKhnz55yc3NT+/btdfDgQQ0ZMkSVK1dWy5YtdeHCBQUEBCgiIkJjxoyRu7u7PDw8NHDgwEL1hoeH68MPP5TVai0yAF1Po0aN9N577+nEiRO644479Pzzz9vdxmKxKDExUQMGDLihvgA4npv1ZuZ0AZRrmzdv1tatW/XKK6+4uhSbF198UTExMYXOz7me+Ph4paenFxmarmfv3r1atmyZ7XwkALcODlEBMJTHH39cn376qVP6+vTTT/XEE084pS8AN4aAA8BQ2rZta7sJoSN9++23CgwMVGRkpEP7AVA6HKICAACGwwwOAAAwHAIOAAAwHAIOAAAwHAIOAAAwHAIOAAAwnP8HbbLjOtUsKQMAAAAASUVORK5CYII=
+" />
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: 'center'," +
+        "    displayIndent: '0em'," +
+        "    showMathMenu: true," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['$','$'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        " linebreaks: { automatic: true, width: '95% container' }, " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
+        "    } " +
+        "}); ";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+<!-- Sidebar -->
+<section class="well well-sm">
+  <ul class="list-group list-group-flush">
+
+<!-- Sidebar/Social -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+  <ul class="list-group" id="social">
+    <li class="list-group-item"><a href="https://github.com/rem2157"><i class="fa fa-github-square fa-lg"></i> Github</a></li>
+    <li class="list-group-item"><a href="https://www.linkedin.com/in/ryan-m-79904a14/"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Social -->
+
+<!-- Sidebar/Links -->
+<li class="list-group-item">
+  <h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+  <ul class="list-group" id="links">
+    <li class="list-group-item">
+      <a href="http://getpelican.com/" target="_blank">Pelican</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://python.org/" target="_blank">Python.org</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://jinja.pocoo.org/" target="_blank">Jinja2</a>
+    </li>
+    <li class="list-group-item">
+      <a href="#" target="_blank">You can modify those links in your config file</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Links -->
+  </ul>
+</section>
+<!-- End Sidebar -->            </aside>
+        </div>
+    </div>
+</div>
+<!-- End Content Container -->
+
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2018 Ryan Mulvey
+            &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="https://ryan.mulvey.nyc/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://ryan.mulvey.nyc/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://ryan.mulvey.nyc/theme/js/respond.min.js"></script>
+
+
+
+
+</body>
+</html>
