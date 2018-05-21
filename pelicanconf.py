@@ -28,6 +28,9 @@ THEME = '../pelican-themes/pelican-bootstrap3'
 JINJA_ENVIRONMENT = {'extensions': ['jinja2.ext.i18n']}
 BOOTSTRAP_THEME = 'darkly'
 
+#
+DISPLAY_ARTICLE_INFO_ON_INDEX = True
+
 # Plugins
 
 PLUGIN_PATHS = ['./plugins/'] 
