@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>Ryan Mulvey</title><link href="https://ryan.mulvey.nyc/" rel="alternate"></link><link href="https://ryan.mulvey.nyc/feeds/all.atom.xml" rel="self"></link><id>https://ryan.mulvey.nyc/</id><updated>2018-05-20T15:40:00-04:00</updated><entry><title>Citibike Data Exploration : First Steps</title><link href="https://ryan.mulvey.nyc/citibike-data-1.html" rel="alternate"></link><published>2018-05-20T15:40:00-04:00</published><updated>2018-05-20T15:40:00-04:00</updated><author><name>Ryan Mulvey</name></author><id>tag:ryan.mulvey.nyc,2018-05-20:/citibike-data-1.html</id><summary type="html">
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
-&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h1 id="Citibike-Data-:-First-Steps-and-Analysis"&gt;Citibike Data : First Steps and Analysis&lt;a class="anchor-link" href="#Citibike-Data-:-First-Steps-and-Analysis"&gt;¶&lt;/a&gt;&lt;/h1&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
 &lt;div class="cell border-box-sizing code_cell rendered"&gt;
 &lt;div class="input"&gt;</summary><content type="html">&lt;style type="text/css"&gt;/*!
 *
@@ -981,14 +973,6 @@ h6:hover .anchor-link {
 
 .ansi-bold { font-weight: bold; }
 &lt;/style&gt;
-&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
-&lt;/div&gt;
-&lt;div class="inner_cell"&gt;
-&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h1 id="Citibike-Data-:-First-Steps-and-Analysis"&gt;Citibike Data : First Steps and Analysis&lt;a class="anchor-link" href="#Citibike-Data-:-First-Steps-and-Analysis"&gt;¶&lt;/a&gt;&lt;/h1&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
 &lt;div class="cell border-box-sizing code_cell rendered"&gt;
 &lt;div class="input"&gt;
 &lt;div class="prompt input_prompt"&gt;In [36]:&lt;/div&gt;
