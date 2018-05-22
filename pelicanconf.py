@@ -34,7 +34,8 @@ DISPLAY_ARTICLE_INFO_ON_INDEX = True
 # Plugins
 
 PLUGIN_PATHS = ['./plugins/'] 
-PLUGINS = ['i18n_subsites', 'ipynb.markup']
+#PLUGINS = ['i18n_subsites', 'ipynb.markup', 'liquid_tags.notebook']
+PLUGINS = ['i18n_subsites', 'liquid_tags.notebook']
 
 # Blogroll
 LINKS = (('Pelican', 'http://getpelican.com/'),
