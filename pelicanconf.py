@@ -24,7 +24,7 @@ MARKUP = ('md',)
 
 # Themes
 
-THEME = '../pelican-themes/pelican-bootstrap3't
+THEME = '../pelican-themes/pelican-bootstrap3'
 JINJA_ENVIRONMENT = {'extensions': ['jinja2.ext.i18n']}
 BOOTSTRAP_THEME = 'simplex'
 #IPYNB_IGNORE_CSS=True
